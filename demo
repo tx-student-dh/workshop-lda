@@ -5,16 +5,28 @@ import pandas as pd
 import numpy as np
 from urllib import request
 
+from nltk.corpus import stopwords
+cachedStopWords = stopwords.words("english")
+
 # importing our dataset
 
 url = "https://www.gutenberg.org/files/345/345-0.txt"
 response = request.urlopen(url)
 raw = response.read().decode('utf8')
 
-# need to put more cleaning here
+# cleaning
+text = raw.split(“START OF THE PROJECT GUTENBERG EBOOK”)
+text = text[1]
+text = text.split(“END OF THE PROJECT GUTENBERG EBOOK”)
+text = text[0]
+
+# taking out some stopwords
+text_tokens = word_tokenize(text)
+tokenized_text = (" ").join(text_tokens)
+tokenized_text = ' '.join([word for word in text.split() if word not in cachedStopWords])
 
 # splitting into chapter
-document_split = text.split('\r\n\r\n\r\n\r\n\r\nCHAPTER')
+document_split = tokenized_text.split('\r\n\r\n\r\n\r\n\r\nCHAPTER')
 
 # vectorizing
 
