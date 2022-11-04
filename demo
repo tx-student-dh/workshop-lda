@@ -1,0 +1,39 @@
+# getting set up
+import os
+import lda
+import pandas as pd
+import numpy as np
+from urllib import request
+
+# importing our dataset
+
+url = "https://www.gutenberg.org/files/345/345-0.txt"
+response = request.urlopen(url)
+raw = response.read().decode('utf8')
+
+# need to put more cleaning here
+
+# splitting into chapter
+document_split = text.split('\r\n\r\n\r\n\r\n\r\nCHAPTER')
+
+# vectorizing
+
+from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(document_split)
+vocabulary = vectorizer.get_feature_names()
+
+# running the model, choosing iterations, choosing number of topics
+
+model = lda.LDA(n_topics = 10, n_iter=1000, random_state=1)
+model.fit(X)
+
+topic_word = model.topic_word_
+n_top_words=50
+
+# print the top 50 words from every topic
+
+for i, topic_distribution in enumerate(topic_word):
+  topic_words = np.array(vocabulary)[np.argsort(topic_distribution)][:-(n_top_words+1):-1]
+  print('topic {}: {}'.format(i, ' '.join(topic_words)))
+  print()
